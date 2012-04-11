@@ -4,7 +4,7 @@ import Database
 
 welcome :: IO ()
 welcome = do
-	putStrLn "\nWelcome to the Phonebook interactive user interface."
+	putStrLn "\nWelcome to the Phonebook interactive user interface.\n"
 	interaction db
 		where
 			db = [("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien +X","000 - 1111112341"), ("Hauke Heien","000 - 1111111")]
@@ -34,17 +34,28 @@ insertio db = do
 
 editio :: DB -> IO ()
 editio db = do
-	putStrLn "editing"
-	interaction db
+	putStrLn ""
+	i <- getidio db
+	putStrLn "\nIs\n"
+	printEntry i 2 2 (getEntryByID i db)
+	putStrLn "\nthe Entry yo want to edit? (y|n)"
+	a <- readChar
+	edio db a i
 
 removeio :: DB -> IO ()
 removeio db = do
-	putStrLn "removing"
-	interaction db
+	putStrLn ""
+	i <- getidio db
+	putStrLn "\nDo you really want to remove\n"
+	printEntry i 2 2 (getEntryByID i db)
+	putStrLn "\n? (y|n)"
+	a <- readChar
+	putStrLn ""
+	remio db a i
 
 printio :: DB -> IO ()
 printio db = do
-	putStrLn ("\nID" ++ (whitespace (spacetid1 db)) ++ "Name" ++ (whitespace (spacetid2 db))++ "Number")
+	putStrLn ("\n ID" ++ (whitespace (spacetid1 db)) ++ "Name" ++ (whitespace (spacetid2 db))++ "Number\n")
 	printEntries  db db 0
 	putStrLn ""
 	interaction db
@@ -67,20 +78,88 @@ helpio db = do
 
 messio :: DB -> IO ()
 messio db = do
-	putStrLn "You clearly don't know how to use the interface. I strongly encourage you to use the h(elp)."
+	putStrLn "\nYou clearly don't know how to use the interface. I strongly encourage you to use the h(elp).\n"
 	interaction db
+
+getidio :: DB -> IO (Int)
+getidio db = do
+	putStrLn "For this action we need the entry's ID. Do you know it? (y|n)"
+	i <- readChar
+	putStrLn ""
+	if i == 'y'
+		then do
+			it <- getterio db
+			return (it)
+		else do
+			putStrLn ("\n ID" ++ (whitespace (spacetid1 db)) ++ "Name" ++ (whitespace (spacetid2 db))++ "Number\n")
+			printEntries  db db 0
+			putStrLn ""
+			it <- getterio db
+			return (it)
+			
+
+getterio :: DB -> IO (Int)
+getterio db = do
+	putStrLn "What is the ID of the Entry you want to work with?"
+	i <- readInt
+	return i
+
+remio :: DB -> Char -> Int -> IO ()
+remio db c i
+	| c == 'y' = do
+		interaction (removeEntryByID i db)
+	|otherwise = do
+		interaction db
+
+--edio :: DB -> Char -> Int -> IO ()
+--edio db c i
+--	| c == 'y' = do
+--		putStrLn "\nPlease specify the entry you want to add:"
+--		e <- buildEntry
+--		putStrLn ""
+--		interaction (editEntryByID i e db)
+--	|otherwise = do
+--		interaction db
+
+edio :: DB -> Char -> Int -> IO ()
+edio db c i
+	| c == 'y' = do
+		putStrLn "\nDou you want to change the name, the number or both? (n|u|b|e)"
+		ch <- readChar
+		putStrLn ""
+		edmad db ch i
+	|otherwise = do
+		interaction db
+
+edmad :: DB -> Char -> Int -> IO ()
+edmad db c i
+	| c == 'n'  = do
+		name <- readName
+		putStrLn ""
+		interaction (editEntryByID i (name, (getNumber(getEntryByID i db))) db)
+	| c == 'u'  = do
+		number <- readNumber
+		putStrLn ""
+		interaction (editEntryByID i ((getName(getEntryByID i db)), number) db)
+	| c == 'b'  = do
+		name <- readName
+		number <- readNumber
+		putStrLn ""
+		interaction (editEntryByID i (name, number) db)
+	| c == 'e'  = interaction db
+	| otherwise = edio db 'y' i
 
 printEntries :: DB -> DB -> Int -> IO ()
 printEntries _ [] _ = return ()
 printEntries db (e:es) i
 	| i >= 0     = do
-		printEntry i (spacetab1 db i) (spacetab2 db (getNumber e)) e
+		printEntry i (spacetab1 db i) (spacetab2 db (getName e)) e
 		printEntries db es (i+1)
 	| otherwise = error "editEntryByID: Negative ID"
 
 printEntry :: Int -> Int -> Int -> Entry -> IO ()
 printEntry i sp1 sp2 (name, number) = do
-	putStrLn ((show i) ++ s1 ++ name ++ s2 ++ number)
+	putStrLn (" " ++ (show i) ++ s1 ++ name ++ s2 ++ number)
 		where
 			s1 = whitespace sp1
 			s2 = whitespace sp2
@@ -108,6 +187,11 @@ readChar = do
 	c <- getLine
 	return (head (safeify c))
 
+readInt :: IO Int
+readInt = do
+	i <- getLine
+	return (read i)
+
 safeify :: [Char] -> [Char]
 safeify s
 	| s == "" = " "
@@ -130,7 +214,7 @@ spacetab1 db i = (spacetid1 db) + 2 - length(show i)
 spacetab2 :: DB -> String -> Int
 spacetab2 [] _ = 0
 spacetab2 db s
-	| (longestName db - 2) > 0 = (longestName db) + 4 - length s
+	| (longestName db - 2) > 0 = (longestName db) + 2 - length s
 	| otherwise = 0
 
 whitespace :: Int -> [Char]
