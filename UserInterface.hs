@@ -7,7 +7,7 @@ welcome = do
 	putStrLn "\nWelcome to the Phonebook interactive user interface.\n"
 	interaction db
 		where
-			db = [("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien","000 - 1111111"), ("Hauke Heien +X","000 - 1111112341"), ("Hauke Heien","000 - 1111111")]
+			db = []
 
 interaction :: DB -> IO ()
 interaction db = do
