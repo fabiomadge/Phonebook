@@ -2,12 +2,10 @@ module UserInterface where
 
 import Database
 
-welcome :: IO ()
-welcome = do
+welcome :: DB -> IO ()
+welcome db = do
 	putStrLn "\nWelcome to the Phonebook interactive user interface.\n"
 	interaction db
-		where
-			db = []
 
 interaction :: DB -> IO ()
 interaction db = do
