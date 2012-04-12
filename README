@@ -1,3 +1,6 @@
--- Adressbook --
+-- Phonebook --
 
 Tiny application disigned to unpersistently store telephone numbers.
+
+Complilation is as easy as:
+ghc --make -O Main -o phonebook
