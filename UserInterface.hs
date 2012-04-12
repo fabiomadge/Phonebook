@@ -53,6 +53,12 @@ removeio db = do
 
 printio :: DB -> IO ()
 printio db = do
+	if (length db) == 0
+		then do
+			putStrLn "\nYour DB is empty.\n"
+			interaction db
+		else do
+
 	putStrLn ("\n ID" ++ (whitespace (spacetid1 db)) ++ "Name" ++ (whitespace (spacetid2 db))++ "Number\n")
 	printEntries  db db 0
 	putStrLn ""
