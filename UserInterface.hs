@@ -77,7 +77,7 @@ helpio db = do
 	putStrLn "  r(emove)   Remove one item"
 	putStrLn "  p(rint)    Print the whole DB"
 	putStrLn "  q(uit)     Quit the appication"
-	putStrLn "  p(rint)    Print this help\n"
+	putStrLn "  h(elp)    Print this help\n"
 	interaction db
 
 messio :: DB -> IO ()
